@@ -1,0 +1,37 @@
+name: transaction-watchdog
+display_name: Transaction Watchdog
+description: 'Watches Mercury for outgoing payments of $1,000 or more. Looks up the vendor in your Notion. Known vendor — quiet note in #finance. Unknown vendor — direct message you with the amount and counterparty.'
+category: finance
+story:
+    hero: A quiet eye on every Mercury payment over $1,000.
+    subheadline: 'Every outgoing payment of $1,000+ gets checked against your Notion vendor list. Known vendors get a one-line note in #finance. Unknown ones DM you before money becomes a mystery.'
+    steps:
+        - role: trigger
+          title: A Mercury payment hits — $1,000 or more.
+          body: Mercury fires a webhook the moment the transaction posts. Watchdog reads the amount and the counterparty.
+          catalog: mercury-webhook
+        - role: action
+          title: Watchdog checks your Notion.
+          body: Searches your Notion vendor list for the counterparty. A hit means it's a recurring payment you already know about.
+          catalog: notion-mcp
+        - role: outcome
+          title: Quiet note — or a DM.
+          body: 'Known vendor: a one-line :moneybag: post in #finance. Unknown vendor: a direct message with the amount and counterparty.'
+          catalog: slack
+connectors:
+    - catalog: notion-mcp
+      description: Read-only Notion access. Watchdog searches your vendor database for the counterparty on every transaction. The integration must be shared with the database in Notion.
+      slot_descriptions:
+        NOTION_TOKEN: 'Notion internal integration token. Create at notion.so/profile/integrations, then share your vendor database with the integration. Format: `secret_...`.'
+      ui:
+        headline: Point Watchdog at your vendor list.
+        blurb: Watchdog only reads. It searches your Notion for the counterparty on each payment — a hit means "known", a miss means "DM the owner".
+        done_note: Reading your vendor list
+channels:
+    - catalog: mercury-webhook
+    - catalog: slack
+      description: 'Gives Watchdog its own Slack bot identity. Posts known-vendor summaries to #finance and DMs the owner for unknown vendors.'
+      ui:
+        headline: Give Watchdog a Slack bot.
+        blurb: 'Watchdog gets its own Slack identity. Invite the bot to #finance after install. Add your Slack member ID to SOUL.md so it knows who to DM for unknown vendors.'
+        done_note: 'Bot installed — invite to #finance'
