@@ -2,6 +2,9 @@ name: transaction-watchdog
 display_name: Transaction Watchdog
 description: 'Watches Mercury for outgoing payments of $1,000 or more. Looks up the vendor in your Notion. Known vendor — quiet note in #finance. Unknown vendor — direct message you with the amount and counterparty.'
 category: finance
+example:
+  prompt: "Did any unusual transactions hit the account today?"
+
 story:
     hero: A quiet eye on every Mercury payment over $1,000.
     subheadline: 'Every outgoing payment of $1,000+ gets checked against your Notion vendor list. Known vendors get a one-line note in #finance. Unknown ones DM you before money becomes a mystery.'
